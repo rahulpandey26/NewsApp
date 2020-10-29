@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">My Beautiful Shop</string>
+
+    <string name="dlg_message_no_internet">No network found! Please check your internet connection</string>
+    <string name="something_went_wrong" translatable="false">Something went wrong, Please retry again</string>
+    <string name="headlines">Headlines</string>
+    <string name="sources">Sources</string>
+    <string name="saved">Saved</string>
 </resources>
