@@ -13,7 +13,7 @@ interface Constants {
     interface HttpReqParamKey {
         companion object {
             const val COUNTRY = "country"
-            const val SOURCE = "source"
+            const val SOURCE = "sources"
             const val API_KEY = "apiKey"
             const val API_KEY_VALUE = "ecf41ddc61484f218c33c11bff044387"
         }

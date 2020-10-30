@@ -5,21 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
-import android.widget.CompoundButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.medibank.shop.R
 import com.medibank.shop.common.util.AppUtility
-import com.medibank.shop.home.model.Article
 import com.medibank.shop.home.model.Source
 import java.util.ArrayList
 
-class NewsSourceListAdapter(
-    val context: Context, private var list: List<Source>,
-    val listener: OnNewsSourceListener) :
+class NewsSourceListAdapter(val context: Context, private var list: List<Source>) :
     RecyclerView.Adapter<NewsSourceListAdapter.NewsSourceListItemHolder>() {
 
-    private var selectedSourceList : ArrayList<String> = ArrayList()
+    private var mSelectedSourceList : ArrayList<String> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsSourceListItemHolder =
         NewsSourceListItemHolder(
@@ -41,20 +37,16 @@ class NewsSourceListAdapter(
             sourceCheckBox.isChecked = model.isChecked
 
             sourceCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
-                model.isChecked = isChecked
+                list[adapterPosition].isChecked = isChecked
                 if(isChecked) {
-                    selectedSourceList.add(model.name!!)
+                    mSelectedSourceList.add(model.name!!.replace(" ", "-"))
                 } else {
-                    if(selectedSourceList.contains(model.name)){
-                        selectedSourceList.remove(model.name)
+                    if(mSelectedSourceList.contains(model.name)){
+                        mSelectedSourceList.remove(model.name)
                     }
                 }
-                AppUtility.setSelectedNewsSource(selectedSourceList)
+                AppUtility.setSelectedNewsSource(mSelectedSourceList)
             }
         }
-    }
-
-    interface OnNewsSourceListener {
-        fun onNewsSourceClick(newsArticle: Article)
     }
 }

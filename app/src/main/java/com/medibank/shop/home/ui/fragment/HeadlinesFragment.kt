@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.medibank.shop.R
 import com.medibank.shop.common.util.Constants
 import com.medibank.shop.common.util.NetworkUtil
+import com.medibank.shop.database.NewsViewModel
 import com.medibank.shop.home.adapter.HeadlinesListAdapter
 import com.medibank.shop.home.model.Article
 import com.medibank.shop.home.model.NewsHeadlineResponse
@@ -32,6 +33,7 @@ class HeadlinesFragment : Fragment(), HeadlinesListAdapter.OnNewsHeadlinesListen
     private lateinit var mHomeViewModel: HomeViewModel
     private lateinit var mNewsHeadlineResponse : NewsHeadlineResponse
     private lateinit var mAdapter: HeadlinesListAdapter
+    private lateinit var mNewsViewModel: NewsViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_home, container, false)
@@ -41,6 +43,10 @@ class HeadlinesFragment : Fragment(), HeadlinesListAdapter.OnNewsHeadlinesListen
 
     private fun initializeViews(rootView: View?) {
         mRecyclerView = rootView!!.findViewById(R.id.recycler_view)
+        mNewsViewModel = ViewModelProviders.of(this).get(NewsViewModel::class.java)
+        mNewsViewModel.allNews?.observe(viewLifecycleOwner,
+            Observer<List<Article?>?> {
+            })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -62,7 +68,8 @@ class HeadlinesFragment : Fragment(), HeadlinesListAdapter.OnNewsHeadlinesListen
 
     private fun getNewsHeadlinesList() {
         if(!NetworkUtil.isNetworkAvailable(requireContext())){
-            Toast.makeText(requireContext(), resources.getString(R.string.dlg_message_no_internet), Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), resources.getString(R.string.dlg_message_no_internet),
+                Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -73,8 +80,11 @@ class HeadlinesFragment : Fragment(), HeadlinesListAdapter.OnNewsHeadlinesListen
         mHomeViewModel.getNewsHeadlineListRepository()?.observe(viewLifecycleOwner, Observer { newsHeadlineResponse ->
             if(newsHeadlineResponse != null) {
                 mNewsHeadlineResponse = newsHeadlineResponse
-                if(null != mNewsHeadlineResponse.articles) {
+                if(null != mNewsHeadlineResponse.articles && mNewsHeadlineResponse.articles!!.isNotEmpty()) {
+                    empty_container.visibility = View.GONE
                     setAdapter(mNewsHeadlineResponse.articles!!)
+                } else {
+                    empty_container.visibility = View.VISIBLE
                 }
             } else {
                 Toast.makeText(context, resources.getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show()
@@ -93,7 +103,8 @@ class HeadlinesFragment : Fragment(), HeadlinesListAdapter.OnNewsHeadlinesListen
     }
 
     private fun setAdapter(articles: List<Article>) {
-        mAdapter = HeadlinesListAdapter(requireContext(), articles, this)
+        mRecyclerView.visibility = View.VISIBLE
+        mAdapter = HeadlinesListAdapter(requireContext(), articles, false, this)
         val layoutManager = LinearLayoutManager(requireContext())
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         mRecyclerView.layoutManager = layoutManager
@@ -103,14 +114,22 @@ class HeadlinesFragment : Fragment(), HeadlinesListAdapter.OnNewsHeadlinesListen
 
     override fun onNewsHeadlinesClick(newsArticle: Article) {
         val intent = Intent(context, NewsDetailsActivity::class.java)
-        intent.putExtra(Constants.ARTICLE_DATA, newsArticle)
+        intent.putExtra(Constants.ARTICLE_DATA, newsArticle.url)
         startActivity(intent)
+    }
+
+    override fun onNewsSaveClick(newsArticle: Article) {
+        mNewsViewModel.insert(newsArticle)
+        Toast.makeText(context, resources.getString(R.string.news_saved), Toast.LENGTH_SHORT).show()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun updateNewsHeadlines(event: String?) {
         when (event) {
-            Constants.UPDATE_NEWS_HEADLINES -> getNewsHeadlinesList()
+            Constants.UPDATE_NEWS_HEADLINES -> {
+                mRecyclerView.visibility = View.GONE
+                getNewsHeadlinesList()
+            }
         }
     }
 }

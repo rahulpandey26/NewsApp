@@ -7,25 +7,26 @@ import com.medibank.shop.home.model.NewsSourceResponse
 import retrofit2.Call
 import java.util.ArrayList
 
-class HomeApiManager(private val mContext: Context) {
+class HomeApiManager(context: Context) {
 
-    private val mApiInterface: ApiInterface = ApiServiceUtil.getInstance(mContext).getApiInterface()
+    private val mApiInterface: ApiInterface = ApiServiceUtil.getInstance(context).getApiInterface()
 
     fun getNewsHeadlinesList(callback: ApiCallback<NewsHeadlineResponse>) {
         val queries: MutableMap<String, String> = HashMap()
-        queries[Constants.HttpReqParamKey.COUNTRY] = "us"
 
         val selectedSourceList : ArrayList<String> =  AppUtility.getSelectedNewsSource()
         if(selectedSourceList.size > 0) {
             var totalSelectedSource = ""
             for(pos in selectedSourceList.indices) {
-                if(selectedSourceList.size == pos -1) {
-                    totalSelectedSource = totalSelectedSource + selectedSourceList[pos] + ","
-                } else {
+                if(pos == selectedSourceList.size -1 || selectedSourceList.size == 1) {
                     totalSelectedSource += selectedSourceList[pos]
+                } else {
+                    totalSelectedSource = totalSelectedSource + selectedSourceList[pos] + ","
                 }
             }
             queries[Constants.HttpReqParamKey.SOURCE] = totalSelectedSource
+        } else {
+            queries[Constants.HttpReqParamKey.COUNTRY] = "us"
         }
 
         queries[Constants.HttpReqParamKey.API_KEY] = Constants.HttpReqParamKey.API_KEY_VALUE

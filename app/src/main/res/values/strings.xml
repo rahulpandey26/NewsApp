@@ -6,4 +6,7 @@
     <string name="headlines">Headlines</string>
     <string name="sources">Sources</string>
     <string name="saved">Saved</string>
+    <string name="news_saved">News saved successfully</string>
+    <string name="select_source">Select Source</string>
+    <string name="save">Save</string>
 </resources>

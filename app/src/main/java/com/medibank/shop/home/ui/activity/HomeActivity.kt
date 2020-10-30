@@ -10,8 +10,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class HomeActivity : AppCompatActivity() {
 
-    // https://newsapi.org/v2/top-headlines?country=us&apiKey=ecf41ddc61484f218c33c11bff044387
-    // api key ecf41ddc61484f218c33c11bff044387
     companion object {
         lateinit var mViewPager: ViewPager
     }

@@ -18,9 +18,7 @@ class HomeViewModel(private val mContext: Context) : ViewModel() {
     fun init() {
         mHomeRepository = HomeRepository.getInstance(mContext)
 
-        if(mNewsHeadlineLiveData == null){
-            mNewsHeadlineLiveData = mHomeRepository?.getNewsHeadlinesList(mContext)
-        }
+        mNewsHeadlineLiveData = mHomeRepository?.getNewsHeadlinesList(mContext)
 
         if (mNewsSourceLiveData == null) {
             mNewsSourceLiveData = mHomeRepository?.getNewsSourceList(mContext)

@@ -14,7 +14,8 @@ import com.medibank.shop.R
 import com.medibank.shop.home.model.Article
 
 class HeadlinesListAdapter(val context: Context, private var list: List<Article>,
-    val listener: OnNewsHeadlinesListener) : RecyclerView.Adapter<HeadlinesListAdapter.HeadlinesListItemHolder>() {
+    val isFromSaved: Boolean, val listener: OnNewsHeadlinesListener) :
+    RecyclerView.Adapter<HeadlinesListAdapter.HeadlinesListItemHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeadlinesListItemHolder =
         HeadlinesListItemHolder(LayoutInflater.from(parent.context)
@@ -32,6 +33,7 @@ class HeadlinesListAdapter(val context: Context, private var list: List<Article>
         private var tvDesc: TextView = view.findViewById(R.id.tvDesc)
         private var tvAuthor : TextView = view.findViewById(R.id.tvAuthor)
         private var userImageView: ImageView = view.findViewById(R.id.imageView)
+        private var saveText: TextView = view.findViewById(R.id.tvSave)
 
         fun bind(model: Article) {
             tvTitle.text = model.title
@@ -45,11 +47,24 @@ class HeadlinesListAdapter(val context: Context, private var list: List<Article>
                 .dontTransform()
                 .into(userImageView)
 
+            if(isFromSaved){
+                saveText.visibility = View.GONE
+            } else {
+                saveText.visibility = View.VISIBLE
+            }
+
             parentCardLyt.setOnClickListener {listener.onNewsHeadlinesClick(model)}
+            saveText.setOnClickListener{listener.onNewsSaveClick(model)}
         }
+    }
+
+    fun setArticles(article: List<Article>) {
+        list = article
+        notifyDataSetChanged()
     }
 
     interface OnNewsHeadlinesListener {
           fun onNewsHeadlinesClick(newsArticle: Article)
+          fun onNewsSaveClick(newsArticle: Article)
     }
 }

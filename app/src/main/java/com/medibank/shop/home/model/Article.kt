@@ -2,14 +2,22 @@ package com.medibank.shop.home.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
+@Entity(tableName = "headlines_table")
 class Article() : Parcelable {
 
+    @PrimaryKey(autoGenerate = true)
+    var id = 0
+
+    @Ignore
     @SerializedName("source")
     @Expose
-    val source: Source? = null
+    var source: Source? = null
 
     @SerializedName("author")
     @Expose

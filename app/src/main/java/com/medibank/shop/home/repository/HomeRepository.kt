@@ -7,9 +7,9 @@ import com.medibank.shop.home.model.NewsHeadlineResponse
 import com.medibank.shop.home.model.NewsSourceResponse
 import com.medibank.shop.home.util.HomeApiManager
 
-class HomeRepository(private val mContext: Context) {
+class HomeRepository(context: Context) {
 
-    private val mHomeApiManager: HomeApiManager = HomeApiManager(mContext)
+    private val mHomeApiManager: HomeApiManager = HomeApiManager(context)
     private val mProgressbarObservable = MutableLiveData<Boolean>()
 
     companion object {

@@ -27,7 +27,7 @@ import com.medibank.shop.home.viewModel.HomeViewModel
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.greenrobot.eventbus.EventBus
 
-class SourcesFragment : Fragment(), NewsSourceListAdapter.OnNewsSourceListener {
+class SourcesFragment : Fragment() {
 
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mApplyBtn: TextView
@@ -110,16 +110,11 @@ class SourcesFragment : Fragment(), NewsSourceListAdapter.OnNewsSourceListener {
     }
 
     private fun setAdapter(articles: List<Source>) {
-        mAdapter = NewsSourceListAdapter(requireContext(), articles, this)
+        mAdapter = NewsSourceListAdapter(requireContext(), articles)
         val layoutManager = LinearLayoutManager(requireContext())
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         mRecyclerView.layoutManager = layoutManager
         mRecyclerView.itemAnimator = DefaultItemAnimator()
         mRecyclerView.adapter = mAdapter
     }
-
-    override fun onNewsSourceClick(newsArticle: Article) {
-
-    }
-
 }
