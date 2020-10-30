@@ -1,8 +1,5 @@
 package com.medibank.shop.common.util
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import java.util.ArrayList
 
 class AppUtility {
